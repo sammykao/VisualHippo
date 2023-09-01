@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    * {
+        border: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    :root {
+        --bg: #17181c;
+        --fg: #e3e4e8;
+        --dur: 8s;
+    }
+    body {
+        background: var(--bg);
+        color: var(--fg);
+        font: bold 4vw/1.5 "Comfortaa", sans-serif;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        letter-spacing: 0.1em;
+    }
+    @media (max-width: 900px) {
+        body {
+            font-size: calc(5px + 2.5vw);
+        }
+        .photos-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+        }
+        .photos-inner {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start; /* Align images to start on smaller screens */
+        }
+        .photos-inner img {
+            max-height: 150px;
+            margin-right: 0.5rem;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #17181c;
+            --fg: #e3e4e8;
+        }
+    }
+    .copyright {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        background-color: var(--bg);
+        color: var(--fg);
+        font-size: 14px;
+    }
+</style>
+
+
+
+{% endblock %}
+
+
+
+{% block body %}
+<br> <br>
+<div class="text-center">
+    <span class="border border-danger">
+        <img src="{{ user_image }}" class="rounded" style="height: 300px; width: auto;">
+    </span>
+</div>
+<br>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4"><small><i class="bi bi-check-circle-fill p-1"></i></small><strong> Restaurants Nearby with Similar Photos </strong></h1>
+            <div class="row">
+                {% for restaurant in restaurants %}
+                <div class="col-sm-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-white">{{ restaurant.name }}</h4>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <p class="card-text"> <i class="bi bi-stars p-1"></i>: {{ restaurant.rating }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="card-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><i class="bi bi-building-fill-check p-1"></i>: {{ restaurant.address }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="card-text"><i class="bi bi-telephone-fill p-1"></i>: {{ restaurant.phone }}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-2 mt-2">
+                                    <a href="{{ restaurant.website }}" class="btn btn-primary" target="_blank">Visit Website</a>
+                                </div>
+                                <div class="col-sm-2 mt-2">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ restaurant.address|urlencode }}" class="btn btn-danger" target="_blank">Get Directions</a>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-12">
+                                    <div class="photos-container" style="width: 100%; overflow-x: auto;">
+                                        <div class="photos-inner" style="white-space: nowrap;">
+                                            {% if restaurant.photos|length > 0 %}
+                                                {% for photo in restaurant.photos %}
+                                                    <img src="{{ photo }}" alt="Restaurant Photo" class="rounded mr-2" style="max-height: 200px;">
+                                                {% endfor %}
+                                            {% else %}
+                                                <p>No related photos... <i class="bi bi-emoji-frown-fill p-1"></i> </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+<div class="copyright">
+    <p> Copyright &copy; Sammy Kao 2023</p>
+</div>
+
+ 
+
+
+{% endblock %}
